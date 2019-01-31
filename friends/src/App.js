@@ -1,14 +1,20 @@
 import React from "react";
 import axios from "axios";
 
-import FriendsList from "./components/FriendsList";
-import AddNewFriendForm from "./components/AddFriendForm";
+import FriendsList from "./components/FriendsContainer/FriendsList";
+import AddNewFriendForm from "./components/FriendsContainer/AddFriendForm";
 
 import "./App.css";
 
 class App extends React.Component {
   state = {
-    friends: []
+    friends: [],
+    newFriend: {
+      id: null,
+      name: "",
+      age: null,
+      email: ""
+    }
   };
 
   componentDidMount() {
@@ -21,14 +27,31 @@ class App extends React.Component {
     console.log(this.state.friends);
   }
 
+  postNewFriend = friend => {
+    axios
+      .post("http://localhost:5000/friends", friend)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
+
+  handleChanges = e => {
+    this.setState(prevState => {
+      return {
+        ...prevState.newFriend,
+        [e.target.name]: e.target.value
+      };
+    });
+  };
+
   render() {
     return (
       <div className="App">
         <h1>Hello Friends!</h1>
-        {this.state.friends.map(friend => (
-          <FriendsList friend={friend} />
-        ))}
-        <AddNewFriendForm />
+        <FriendsList friends={this.state.friends} />
+        <AddNewFriendForm
+          handleChanges={this.handleChanges}
+          postNewFriend={this.postNewFriend}
+        />
       </div>
     );
   }

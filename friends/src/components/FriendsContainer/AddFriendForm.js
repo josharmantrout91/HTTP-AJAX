@@ -1,10 +1,36 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 
-export default class AddNewFriendForm extends React.Component {
+class AddNewFriendForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      newFriend: {
+        id: null,
+        name: "",
+        age: null,
+        email: ""
+      }
+    };
+  }
+
+  handleChanges = e => {
+    this.setState(prevState => {
+      return {
+        ...prevState.newFriend,
+        [e.target.name]: e.target.value
+      };
+    });
+  };
+
+  postNewFriend = e => {
+    e.preventDefault();
+    this.props.postNewFriend(this.state.newFriend);
+  };
+
   render() {
     return (
-      <div className="addNewFriend">
+      <div className="friend-form-wrapper">
         <Form>
           <FormGroup>
             <Label for="exampleEmail">Name</Label>
@@ -34,3 +60,5 @@ export default class AddNewFriendForm extends React.Component {
     );
   }
 }
+
+export default AddNewFriendForm;
